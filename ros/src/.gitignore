@@ -1,3 +1,8 @@
 /CMakeLists.txt
 .idea
 cmake-build-debug
+CMakeFiles
+catkin_generated
+cmake_install.cmake
+CTestTestfile.cmake
+cmake

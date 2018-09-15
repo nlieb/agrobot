@@ -6,7 +6,7 @@ add_compile_options(-std=c++11)
 ## Find catkin macros and libraries
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
-find_package(catkin REQUIRED)
+find_package(catkin REQUIRED COMPONENTS std_msgs)
 
 ## System dependencies are found with CMake's conventions
 # find_package(Boost REQUIRED COMPONENTS system)
@@ -97,6 +97,18 @@ message(STATUS "Darknet path dir = ${DARKNET_PATH}")
 # Find CUDA
 find_package(CUDA)
 
+if (CUDA_FOUND)
+  #Get CUDA compute capability
+
+  set(CUDA_NVCC_FLAGS "${CUDA_NVCC_FLAGS} ${ARCH}")
+  add_definitions(-DGPU)
+
+  #Add library path to linker
+  link_directories(
+    "${CUDA_TOOLKIT_ROOT_DIR}/lib64"
+  )
+endif()
+
 if (NOT CUDA_FOUND OR NOT ${CUDA_SUCCESS})
   message( FATAL_ERROR "Could not detect CUDA. CMake will exit." )
 endif()
@@ -106,52 +118,73 @@ endif()
 ## Your package locations should be listed before other locations
 include_directories(
 # include
+  src
 # ${catkin_INCLUDE_DIRS}
 )
 
 set(DARKNET_SOURCE
   ${DARKNET_PATH}/src/activation_layer.c
   ${DARKNET_PATH}/src/activations.c
+  ${DARKNET_PATH}/src/art.c
   ${DARKNET_PATH}/src/avgpool_layer.c
   ${DARKNET_PATH}/src/batchnorm_layer.c
   ${DARKNET_PATH}/src/blas.c
   ${DARKNET_PATH}/src/box.c
+  ${DARKNET_PATH}/src/captcha.c
+  ${DARKNET_PATH}/src/cifar.c
+  ${DARKNET_PATH}/src/classifier.c
+  ${DARKNET_PATH}/src/coco.c
   ${DARKNET_PATH}/src/col2im.c
+  ${DARKNET_PATH}/src/compare.c
   ${DARKNET_PATH}/src/connected_layer.c
   ${DARKNET_PATH}/src/convolutional_layer.c
   ${DARKNET_PATH}/src/cost_layer.c
+  ${DARKNET_PATH}/src/cpu_gemm.c
   ${DARKNET_PATH}/src/crnn_layer.c
   ${DARKNET_PATH}/src/crop_layer.c
   ${DARKNET_PATH}/src/cuda.c
+  ${DARKNET_PATH}/src/darknet.c
   ${DARKNET_PATH}/src/data.c
   ${DARKNET_PATH}/src/deconvolutional_layer.c
+  ${DARKNET_PATH}/src/demo.c
   ${DARKNET_PATH}/src/detection_layer.c
+  ${DARKNET_PATH}/src/detector.c
+  ${DARKNET_PATH}/src/dice.c
   ${DARKNET_PATH}/src/dropout_layer.c
   ${DARKNET_PATH}/src/gemm.c
+  ${DARKNET_PATH}/src/getopt.c
+  ${DARKNET_PATH}/src/go.c
   ${DARKNET_PATH}/src/gru_layer.c
   ${DARKNET_PATH}/src/im2col.c
   ${DARKNET_PATH}/src/image.c
-  ${DARKNET_PATH}/src/l2norm_layer.c
   ${DARKNET_PATH}/src/layer.c
   ${DARKNET_PATH}/src/list.c
   ${DARKNET_PATH}/src/local_layer.c
-  ${DARKNET_PATH}/src/logistic_layer.c
-  ${DARKNET_PATH}/src/lstm_layer.c
   ${DARKNET_PATH}/src/matrix.c
   ${DARKNET_PATH}/src/maxpool_layer.c
   ${DARKNET_PATH}/src/network.c
+  ${DARKNET_PATH}/src/nightmare.c
   ${DARKNET_PATH}/src/normalization_layer.c
   ${DARKNET_PATH}/src/option_list.c
   ${DARKNET_PATH}/src/parser.c
   ${DARKNET_PATH}/src/region_layer.c
   ${DARKNET_PATH}/src/reorg_layer.c
+  ${DARKNET_PATH}/src/reorg_old_layer.c
+  ${DARKNET_PATH}/src/rnn.c
   ${DARKNET_PATH}/src/rnn_layer.c
+  ${DARKNET_PATH}/src/rnn_vid.c
   ${DARKNET_PATH}/src/route_layer.c
   ${DARKNET_PATH}/src/shortcut_layer.c
   ${DARKNET_PATH}/src/softmax_layer.c
+  ${DARKNET_PATH}/src/super.c
+  ${DARKNET_PATH}/src/swag.c
+  ${DARKNET_PATH}/src/tag.c
   ${DARKNET_PATH}/src/tree.c
   ${DARKNET_PATH}/src/upsample_layer.c
   ${DARKNET_PATH}/src/utils.c
+  ${DARKNET_PATH}/src/voxel.c
+  ${DARKNET_PATH}/src/writing.c
+  ${DARKNET_PATH}/src/yolo.c
   ${DARKNET_PATH}/src/yolo_layer.c
   )
 
@@ -171,18 +204,17 @@ set(DARKNET_KERNELS
   ${DARKNET_PATH}/src/dropout_layer_kernels.cu
   ${DARKNET_PATH}/src/im2col_kernels.cu
   ${DARKNET_PATH}/src/maxpool_layer_kernels.cu
-
+  ${DARKNET_PATH}/src/network_kernels.cu
   )
 
 include_directories(
   ${DARKNET_PATH}/src
-  ${DARKNET_PATH}/include
 )
 
 # create yolo detector library
 cuda_add_library(yolo_detector
-  src/detector.cpp
-  src/yolo_detector.cpp
+  src/yolo_v2_class.cpp
+  src/yolo_detector.hpp
 
   ${DARKNET_SOURCE}
   ${DARKNET_KERNELS}
