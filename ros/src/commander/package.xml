@@ -1,13 +1,13 @@
 <?xml version="1.0"?>
 <package format="2">
-  <name>hardware</name>
+  <name>commander</name>
   <version>0.0.0</version>
-  <description>The hardware package</description>
+  <description>The commander package</description>
 
   <!-- One maintainer tag required, multiple allowed, one person per tag -->
   <!-- Example:  -->
   <!-- <maintainer email="jane.doe@example.com">Jane Doe</maintainer> -->
-  <maintainer email="nwliebrecht@gmail.com">nathan</maintainer>
+  <maintainer email="nathan@todo.todo">nathan</maintainer>
 
 
   <!-- One license tag required, multiple allowed, one license per tag -->
@@ -19,7 +19,7 @@
   <!-- Url tags are optional, but multiple are allowed, one per tag -->
   <!-- Optional attribute type can be: website, bugtracker, or repository -->
   <!-- Example: -->
-  <!-- <url type="website">http://wiki.ros.org/hardware</url> -->
+  <!-- <url type="website">http://wiki.ros.org/commander</url> -->
 
 
   <!-- Author tags are optional, multiple are allowed, one per tag -->
@@ -50,19 +50,16 @@
   <!-- Use doc_depend for packages you need only for building documentation: -->
   <!--   <doc_depend>doxygen</doc_depend> -->
   <buildtool_depend>catkin</buildtool_depend>
+  <build_depend>detector</build_depend>
+  <build_depend>hardware</build_depend>
+  <build_export_depend>detector</build_export_depend>
+  <build_export_depend>hardware</build_export_depend>
+  <exec_depend>detector</exec_depend>
+  <exec_depend>hardware</exec_depend>
 
-  <build_depend>message_generation</build_depend>
 
+  <exec_depend>message_runtime</exec_depend>
 
-  <depend>libi2c-dev</depend>
-  <depend>roscpp</depend>
-  <depend>rospy</depend>
-  <depend>std_msgs</depend>
-  <depend>actionlib</depend>
-  <depend>actionlib_msgs</depend>
-  <depend>message_runtime</depend>
-  <depend>gscam</depend>
-  <depend>cv_camera</depend>
 
   <!-- The export tag contains other, unspecified, tags -->
   <export>
@@ -70,4 +67,3 @@
 
   </export>
 </package>
-        PREPARE-study-KEEP-SIMPLE
