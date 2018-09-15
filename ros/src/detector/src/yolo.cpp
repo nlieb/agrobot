@@ -27,10 +27,13 @@ int main(int argc, char *argv[])
 
     if (argc > 1) filename = argv[1];
 
+    cv::Mat mat_img = cv::imread(filename);
     YoloDetector yd = YoloDetector(cfg_file, weights_file);
 
     try {
-        yd.detect_img(filename);
+        std::vector<bbox_t> result_vec = yd.detect_img(mat_img);
+        mat_img = yd.draw_rois(mat_img, result_vec);
+        cv::imwrite("./SAVED.jpg", mat_img);
     }
     catch (std::exception &e) { std::cerr << "exception: " << e.what() << "\n"; getchar(); }
     catch (...) { std::cerr << "unknown exception \n"; getchar(); }

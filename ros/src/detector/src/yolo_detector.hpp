@@ -14,20 +14,21 @@ class YoloDetector{
             obj_names.push_back("weed");
         }
 
-        void detect_img(std::string filename){
-            cv::Mat mat_img = cv::imread(filename);
-            
+        std::vector<bbox_t> detect_img(cv::Mat mat_img){ 
             auto start = std::chrono::steady_clock::now();
             std::vector<bbox_t> result_vec = detector.detect(mat_img);
             auto end = std::chrono::steady_clock::now();
             std::chrono::duration<double> spent = end - start;
             std::cout << " Time: " << spent.count() << " sec \n";
 
-            draw_boxes(mat_img, result_vec, obj_names);
-            cv::imwrite( "./SAVED.jpg", mat_img );
-
             show_console_result(result_vec);
-    }
+            return result_vec;
+        }
+
+        cv::Mat draw_rois(cv::Mat mat_img, std::vector<bbox_t> result_vec) {
+            draw_boxes(mat_img, result_vec, obj_names);
+            return mat_img;
+        }
 
     private:
         void show_console_result(std::vector<bbox_t> const result_vec) {
