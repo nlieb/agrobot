@@ -21,8 +21,8 @@
 
 int main(int argc, char *argv[])
 {
-    std::string  cfg_file = "config/yolov3-obj.cfg"; // "cfg/yolov3.cfg";
-    std::string  weights_file = "config/yolov3-obj_1200.weights"; // "yolov3.weights";
+    std::string  cfg_file = "yolov3-obj.cfg"; // "cfg/yolov3.cfg";
+    std::string  weights_file = "yolov3-obj_1200.weights"; // "yolov3.weights";
     std::string filename;
 
     if (argc > 1) filename = argv[1];
