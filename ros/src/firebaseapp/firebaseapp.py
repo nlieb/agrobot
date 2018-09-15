@@ -50,6 +50,10 @@ class FirebaseApp():
 
         self.close()
 
+    def run(self):
+        while True:
+            sleep(.5)
+
     def close(self):
         self.connection.close()
 
