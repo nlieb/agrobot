@@ -1,5 +1,7 @@
-#include <au_sensors/JHPWMPCA9685.h>
 #include <math.h>
+
+#include <jhpwmpca9685.h>
+
 
 PCA9685::PCA9685(int address) {
   kI2CBus = 1;            // Default I2C bus for Jetson TK1

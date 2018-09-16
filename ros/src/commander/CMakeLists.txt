@@ -10,6 +10,7 @@ project(commander)
 find_package(catkin REQUIRED COMPONENTS
   detector
   hardware
+  std_msgs
 )
 
 ## System dependencies are found with CMake's conventions
