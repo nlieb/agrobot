@@ -51,8 +51,6 @@
   <!--   <doc_depend>doxygen</doc_depend> -->
   <buildtool_depend>catkin</buildtool_depend>
 
-  <build_depend>message_generation</build_depend>
-
 
   <depend>libi2c-dev</depend>
   <depend>roscpp</depend>
@@ -65,6 +63,8 @@
   <depend>message_runtime</depend>
   <depend>gscam</depend>
   <depend>cv_camera</depend>
+
+  <build_depend>message_generation</build_depend>
 
   <!-- The export tag contains other, unspecified, tags -->
   <export>

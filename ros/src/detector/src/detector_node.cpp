@@ -65,7 +65,9 @@ void cameraCb(const sensor_msgs::ImageConstPtr &frame) {
 
   roiArray.rois = roiArrayVec;
   roi_pub.publish(roiArray);
-  image_pub.publish(inputImage);
+
+  sensor_msgs::Image img_msg = *cv_bridge::CvImage(std_msgs::Header(), "rgb8", inputImage).toImageMsg();  
+  image_pub.publish(img_msg);
 }
 
 int main(int argc, char** argv) {
@@ -75,7 +77,7 @@ int main(int argc, char** argv) {
 
   start_sub = nh.subscribe("/bottom_cam/image_raw", 1, &cameraCb);
   roi_pub = nh.advertise<detector::RegionOfInterestArray>("/detector/rois", 1);
-  image_pub = nh.advertise<cv::Mat>("/detector/image", 1);
+  image_pub = nh.advertise<sensor_msgs::Image>("/detector/image", 1);
 
   ros::spin();
   return 0;
