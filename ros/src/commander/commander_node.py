@@ -17,6 +17,8 @@ from cv_bridge import CvBridge, CvBridgeError
 
 import rospy
 
+from commander.RunState import RunState
+
 bridge = CvBridge()
 class Commander():
     def __init__(self):
@@ -29,7 +31,7 @@ class Commander():
         )
         
         # Pubs
-        self.pub_motor = rospy.Publisher('motor/start', Bool, queue_size=5)
+        self.motor_pub = rospy.Publisher('motor/start', Bool, queue_size=5)
 
         # Subs
         # rospy.Subscriber('/actuator', Int64, self.actuator)
@@ -43,20 +45,29 @@ class Commander():
 
         self.connection = robo_ref.listen(self.robot_command)
 
+        self.state = RunState.IDLE
+        self.roi = None
+
     def robot_command(self, resp):
         running = bool(resp.data.get('running'))
-        self.pub_motor.publish(running)
 
-    def send_roi(self, resp):
-        print('????', resp.data)
+        if running and RunState.IDLE:
+            self.state = RunState.SEARCH
+        else:
+            self.state = RunState.IDLE
+
+    def send_roi(self, roiArray):
+        # TODO: Select first roi
+        self.roi = roiArray[0]
         db.reference('/roi/0').push({
             "time": time(),
-            "num": len(resp.data),
+            "num": len(roiArray.rois.length),
         })
 
     def get_image(self, resp):
         try:
             cv_image = bridge.imgmsg_to_cv2(resp, "bgr8")
+            self.got_image = True
         except CvBridgeError as e:
             print(e)
             return
@@ -75,9 +86,29 @@ class Commander():
             "num": num_sends,
         })
 
+    def enable_motor(self, enable):
+        # TODO: Add distance estimates
+        if enable:
+            self.motor_pub.publish(Bool(True))
+        else:
+            self.motor_pub.publish(Bool(False))
+
+    def loop(self):
+        if self.state == RunState.IDLE:
+            self.enable_motor(False)
+        elif self.state == RunState.SEARCH:
+            self.enable_motor(True)
+
+            if self.roi is not None:
+                self.roi = None
+                self.state = RunState.IDLE
+        else:
+            self.state = RunState.IDLE
+
     def run(self):
         rate = rospy.Rate(10) # 10hz
         while not rospy.is_shutdown():
+            self.loop()
             rate.sleep()
  
         self.close()
