@@ -9,6 +9,8 @@ import random
 import base64
 from time import time
 
+import rospy
+
 class FirebaseApp():
     def __init__(self):
         cred = credentials.Certificate("secret.json")
@@ -79,8 +81,9 @@ class FirebaseApp():
 
 if __name__ == "__main__":
     f = FirebaseApp()
-
     try:
         f.sketch_run()
     except KeyboardInterrupt:
         f.close()
+
+    rospy.spin()

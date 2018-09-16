@@ -10,8 +10,8 @@ void motorStartCb(const std_msgs::Bool &msg) {
   printf("base speed cb\n");
 
   if(msg.data) {
-    pca9685->setPulseLength(0, 1000);
-    pca9685->setPulseLength(1, 1000);
+    pca9685->setPulseLength(0, 350);
+    pca9685->setPulseLength(1, 350);
   } else {
     pca9685->setPulseLength(0, 0);
     pca9685->setPulseLength(1, 0);

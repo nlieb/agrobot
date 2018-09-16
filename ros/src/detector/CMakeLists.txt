@@ -6,7 +6,13 @@ add_compile_options(-std=c++11)
 ## Find catkin macros and libraries
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
-find_package(catkin REQUIRED COMPONENTS std_msgs)
+find_package(catkin REQUIRED COMPONENTS
+  message_generation
+  std_msgs
+  roscpp
+  cv_bridge
+  image_transport
+  sensor_msgs)
 
 ## System dependencies are found with CMake's conventions
 # find_package(Boost REQUIRED COMPONENTS system)
@@ -42,11 +48,10 @@ find_package(catkin REQUIRED COMPONENTS std_msgs)
 ##   * add every package in MSG_DEP_SET to generate_messages(DEPENDENCIES ...)
 
 ## Generate messages in the 'msg' folder
-# add_message_files(
-#   FILES
-#   Message1.msg
-#   Message2.msg
-# )
+add_message_files(
+ FILES
+ RegionOfInterestArray.msg
+)
 
 ## Generate services in the 'srv' folder
 # add_service_files(
@@ -63,10 +68,11 @@ find_package(catkin REQUIRED COMPONENTS std_msgs)
 # )
 
 ## Generate added messages and services with any dependencies listed here
-# generate_messages(
-#   DEPENDENCIES
-#   std_msgs  # Or other packages containing msgs
-# )
+ generate_messages(
+   DEPENDENCIES
+   std_msgs
+   sensor_msgs
+ )
 
 ###################################
 ## catkin specific configuration ##
@@ -113,13 +119,19 @@ if (NOT CUDA_FOUND OR NOT ${CUDA_SUCCESS})
   message( FATAL_ERROR "Could not detect CUDA. CMake will exit." )
 endif()
 
-
 ## Specify additional locations of header files
 ## Your package locations should be listed before other locations
 include_directories(
 # include
   src
-# ${catkin_INCLUDE_DIRS}
+  ${catkin_INCLUDE_DIRS}
+)
+
+#Find OpenCV
+find_package(OpenCV REQUIRED)
+
+include_directories(
+  ${OpenCV_INCLUDE_DIRS}
 )
 
 set(DARKNET_SOURCE
@@ -145,6 +157,7 @@ set(DARKNET_SOURCE
   ${DARKNET_PATH}/src/cuda.c
   ${DARKNET_PATH}/src/darknet.c
   ${DARKNET_PATH}/src/data.c
+  ${DARKNET_PATH}/src/http_stream.cpp
   ${DARKNET_PATH}/src/deconvolutional_layer.c
   ${DARKNET_PATH}/src/demo.c
   ${DARKNET_PATH}/src/detection_layer.c
@@ -211,6 +224,12 @@ include_directories(
   ${DARKNET_PATH}/src
 )
 
+add_definitions(
+  -DOPENCV
+  -DGPU
+  -O4 -g
+)
+
 # create yolo detector library
 cuda_add_library(yolo_detector
   src/yolo_v2_class.cpp
@@ -233,6 +252,16 @@ target_link_libraries(yolo_detector
   cudart
   cublas
   curand
+  ${Boost_LIBRARIES}
+  ${OpenCV_LIBRARIES}
+  ${catkin_LIBRARIES}
+  )
+
+add_executable(detector_node
+  src/detector_node.cpp)
+
+target_link_libraries(detector_node
+  yolo_detector
   ${Boost_LIBRARIES}
   ${OpenCV_LIBRARIES}
   ${catkin_LIBRARIES}

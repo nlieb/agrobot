@@ -2,21 +2,22 @@
 #include <iomanip> 
 #include <string>
 #include <vector>
-
-#include "yolo_v2_class.hpp"    // imported functions from DLL
+#include <chrono>
 #include "opencv.hpp"
+#include "yolo_v2_class.hpp"    // imported functions from DLL
+
 
 
 // Hardcode
 class YoloDetector{
     public:
-        YoloDetector(std::string cfg_file, std::string weights_file) : detector(cfg_file, weights_file){
+        YoloDetector(std::string cfg_file, std::string weights_file) : yd(cfg_file, weights_file){
             obj_names.push_back("weed");
         }
 
         std::vector<bbox_t> detect_img(cv::Mat mat_img){ 
             auto start = std::chrono::steady_clock::now();
-            std::vector<bbox_t> result_vec = detector.detect(mat_img);
+            std::vector<bbox_t> result_vec = yd.detect(mat_img);
             auto end = std::chrono::steady_clock::now();
             std::chrono::duration<double> spent = end - start;
             std::cout << " Time: " << spent.count() << " sec \n";
@@ -40,5 +41,5 @@ class YoloDetector{
             }
         }
 		std::vector<std::string> obj_names;
-        Detector detector;
+    Detector yd;
 };
