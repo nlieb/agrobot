@@ -26,7 +26,7 @@
 ros::Subscriber start_sub;
 ros::Publisher roi_pub, image_pub;
 detector::RegionOfInterestArray roiArray;
-YoloDetector yd("", "");
+YoloDetector yd("/home/nvidia/agrobot/ros/src/detector/yolov3-obj.cfg", "/home/nvidia/agrobot/ros/src/detector/yolov3-obj_4300.weights");
 
 bool convertToMat(const sensor_msgs::ImageConstPtr &frame,
                   cv::Mat &output) {
