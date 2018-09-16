@@ -10,6 +10,9 @@ add_compile_options(-std=c++11)
 find_package(catkin REQUIRED COMPONENTS
   message_generation
   std_msgs
+  roscpp
+  cv_bridge
+  image_transport
   )
 
 ## System dependencies are found with CMake's conventions
@@ -103,7 +106,7 @@ generate_messages(
 catkin_package(
 #  INCLUDE_DIRS include
 #  LIBRARIES hardware
-  CATKIN_DEPENDS message_runtime cv_camera gscam
+  CATKIN_DEPENDS message_runtime cv_camera gscam roscpp
 #  DEPENDS system_lib
 )
 
@@ -115,7 +118,7 @@ catkin_package(
 ## Your package locations should be listed before other locations
 include_directories(
   src
-# ${catkin_INCLUDE_DIRS}
+  ${catkin_INCLUDE_DIRS}
 )
 
 ## Declare a C++ library
@@ -139,6 +142,12 @@ add_library(jhpwmpca9685
 # add_executable(${PROJECT_NAME}_node src/hardware_node.cpp)
 
 add_executable(motor_node src/motor_node.cpp)
+
+# Specify libraries to link a library or executable target against
+target_link_libraries(motor_node
+  jhpwmpca9685
+  ${catkin_LIBRARIES}
+)
 
 ## Rename C++ executable without prefix
 ## The above recommended prefix causes long target names, the following renames the
