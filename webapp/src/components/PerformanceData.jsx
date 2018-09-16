@@ -41,7 +41,7 @@ class PerformanceData extends Component {
             weedsPerSqrMeter: totalWeedsPerSqrMeter.toFixed(2),
             totalWeedsPicked: totalWeeds,
             distanceTraveled: distance.toFixed(2),
-            pesticidesSaved: pesticidesSaved.toFixed(2),
+            pesticidesSaved: pesticidesSaved.toFixed(4),
             areaMonitored: areaMonitored.toFixed(2),
         });
     }
