@@ -2,6 +2,7 @@
 #include <ros/ros.h>
 #include <jhpwmpca9685.h>
 #include <std_msgs/Bool.h>
+#include <std_msgs/Int32.h>
 
 
 PCA9685 *pca9685 = new PCA9685();
@@ -10,7 +11,19 @@ void motorStartCb(const std_msgs::Bool &msg) {
   printf("base speed cb\n");
 
   if(msg.data) {
-    pca9685->setPulseLength(0, 350);
+    pca9685->setPulseLength(14, 350);
+    pca9685->setPulseLength(15, 350);
+  } else {
+    pca9685->setPulseLength(14, 0);
+    pca9685->setPulseLength(15, 0);
+  }
+}
+
+void motorLateralCb(const std_msgs::Bool &msg) {
+  printf("base speed cb\n");
+
+  if(msg.data) {
+    pca9685->setPulseLength(2, 350);
     pca9685->setPulseLength(1, 350);
   } else {
     pca9685->setPulseLength(0, 0);
@@ -35,7 +48,9 @@ int main(int argc, char** argv) {
   pca9685->setAllPWM(0, 0);
 
   ros::Subscriber start_sub =
-    nh.subscribe("motor/start", 1, &motorStartCb);
+          nh.subscribe("motor/start", 1, &motorStartCb);
+  ros::Subscriber lateral_sub =
+          nh.subscribe("motor/lateral", 1, &motorLateralCb);
 
   ros::Rate r(30);
   std_msgs::Bool start_button;

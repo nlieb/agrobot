@@ -1,4 +1,4 @@
-from firebase import firebase
+#from firebase import firebase
 import firebase_admin
 from firebase_admin import credentials, db
 import rospy
