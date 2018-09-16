@@ -1,4 +1,4 @@
-
+#!/usr/bin/python
 
 import rospy
 from std_msgs.msg import Bool, Int32
@@ -35,11 +35,11 @@ def motorLateralCb(msg):
     if dir == 1:
         ser.write('8\r1\r')
         ser.write('2\r0\r')
-        ser.write('6\r70\r')
+        ser.write('6\r40\r')
     elif dir == -1:
         ser.write('8\r0\r')
         ser.write('2\r1\r')
-        ser.write('6\r70\r')
+        ser.write('6\r40\r')
     else:
         ser.write('8\r0\r')
         ser.write('2\r0\r')

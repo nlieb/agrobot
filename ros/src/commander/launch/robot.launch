@@ -1,0 +1,5 @@
+<launch>
+    <node name="commander_node" pkg="commander" type="commander_node.py" />
+    <node name="detector_node" pkg="detector" type="detector_node" />
+    <node name="motor_node" pkg="hardware" type="motor_node.py" />
+</launch>

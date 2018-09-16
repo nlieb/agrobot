@@ -1,4 +1,3 @@
-#from firebase import firebase
 import firebase_admin
 from firebase_admin import credentials, db
 import rospy
@@ -19,9 +18,11 @@ import rospy
 
 from commander.RunState import RunState
 
-bridge = CvBridge()
+
 class Commander():
     def __init__(self):
+        self.bridge = CvBridge()
+
         cred = credentials.Certificate('secret.json')
         self.app = firebase_admin.initialize_app(
             credential=cred,
@@ -37,8 +38,6 @@ class Commander():
         # rospy.Subscriber('/actuator', Int64, self.actuator)
         rospy.Subscriber('/detector/image', Image, self.get_image)
         rospy.Subscriber('/detector/rois', RegionOfInterestArray, self.send_roi)
-
-        rospy.init_node('commander')
 
         robo_ref = db.reference('/robot/0')
         robo_ref.get().get('running', False)
@@ -61,12 +60,13 @@ class Commander():
         self.roi = roiArray[0]
         db.reference('/roi/0').push({
             "time": time(),
-            "num": len(roiArray.rois.length),
+            "num": len(roiArray.rois),
         })
 
     def get_image(self, resp):
+        prin'get image!', resp)
         try:
-            cv_image = bridge.imgmsg_to_cv2(resp, "bgr8")
+            cv_image = self.bridge.imgmsg_to_cv2(resp, "bgr8")
             self.got_image = True
         except CvBridgeError as e:
             print(e)
@@ -118,6 +118,7 @@ class Commander():
 
 
 if __name__ == "__main__":
+    rospy.init_node('commander')
     c = Commander()
     try:
         c.run()
