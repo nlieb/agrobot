@@ -26,7 +26,7 @@
 ros::Subscriber start_sub;
 ros::Publisher roi_pub, image_pub;
 detector::RegionOfInterestArray roiArray;
-YoloDetector yd("", ""); // TODO!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+YoloDetector yd("", "");
 
 bool convertToMat(const sensor_msgs::ImageConstPtr &frame,
                   cv::Mat &output) {
