@@ -24,7 +24,7 @@
 
 
 ros::Subscriber start_sub;
-ros::Publisher roi_pub;
+ros::Publisher roi_pub, image_pub;
 detector::RegionOfInterestArray roiArray;
 YoloDetector yd("", ""); // TODO!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
@@ -58,14 +58,14 @@ void cameraCb(const sensor_msgs::ImageConstPtr &frame) {
 
     }
 
-
-    // mat_img = yd.draw_rois(mat_img, result_vec);
+    inputImage = yd.draw_rois(inputImage, result_vec);
   }
   catch (std::exception &e) { std::cerr << "exception: " << e.what() << "\n"; getchar(); }
   catch (...) { std::cerr << "unknown exception \n"; getchar(); }
 
   roiArray.rois = roiArrayVec;
   roi_pub.publish(roiArray);
+  image_pub.publish(inputImage);
 }
 
 int main(int argc, char** argv) {
@@ -75,6 +75,7 @@ int main(int argc, char** argv) {
 
   start_sub = nh.subscribe("/bottom_cam/image_raw", 1, &cameraCb);
   roi_pub = nh.advertise<detector::RegionOfInterestArray>("/detector/rois", 1);
+  image_pub = nh.advertise<cv::Mat>("/detector/image", 1);
 
   ros::spin();
   return 0;
