@@ -10,11 +10,13 @@ import DashboardNav from './DashboardNav';
 import ArgoBotControls from './ArgoBotControls'
 import RealTimeChart from './RealTimeChart'
 import ArgoBotMap from './ArgoBotMap'
+import StreamingBox from './StreamingBox'
+import PerformanceData from './PerformanceData'
 
 const WINDOW_MAP = {
   a: {
-    'name': 'Left Window',
-    'content': <p>YAS</p>
+    'name': 'Performance Data',
+    'content': <PerformanceData />
   },
   b: {
     'name': 'User Controls',
@@ -29,11 +31,11 @@ const WINDOW_MAP = {
     'content': <ArgoBotControls />
   },
   e: {
-    'name': 'Live Stream',
-    'content': <p>Stream here</p>
+    'name': 'AgroBot Live Stream',
+    'content': <StreamingBox />
   },
   f: {
-    'name': 'Graph 1',
+    'name': 'Region of Interest Activity Graph',
     'content': <RealTimeChart />
   },
 };

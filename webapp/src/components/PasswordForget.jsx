@@ -4,10 +4,14 @@ import { Link } from 'react-router-dom';
 import { auth } from '../firebase';
 import * as routes from '../constants/routes';
 
+import { Form, Message, Container, Button } from 'semantic-ui-react'
+
 const PasswordForgetPage = () =>
   <div>
-    <h1>PasswordForget</h1>
-    <PasswordForgetForm />
+    <Container>
+      <h1>Forgot your Password?</h1>
+      <PasswordForgetForm />
+    </Container>
   </div>
 
 const byPropKey = (propertyName, value) => () => ({
@@ -49,19 +53,25 @@ class PasswordForgetForm extends Component {
     const isInvalid = email === '';
 
     return (
-      <form onSubmit={this.onSubmit}>
-        <input
-          value={this.state.email}
-          onChange={event => this.setState(byPropKey('email', event.target.value))}
-          type="text"
-          placeholder="Email Address"
-        />
-        <button disabled={isInvalid} type="submit">
+      <Form onSubmit={this.onSubmit}>
+        <Form.Field>
+          <input
+            value={this.state.email}
+            onChange={event => this.setState(byPropKey('email', event.target.value))}
+            type="text"
+            placeholder="Email Address"
+          />
+        </Form.Field>
+        <Button disabled={isInvalid} type="submit">
           Reset My Password
-        </button>
+        </Button>
 
-        { error && <p>{error.message}</p> }
-      </form>
+        { error && <Message
+                        error
+                        header='Error'
+                        content={error.message}
+                    /> }
+      </Form>
     );
   }
 }

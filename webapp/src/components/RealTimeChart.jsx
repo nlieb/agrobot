@@ -1,33 +1,39 @@
 import React, {Component} from 'react';
 
-import { VictoryChart, VictoryLine, VictoryZoomContainer } from 'victory';
+import { VictoryChart, VictoryArea } from 'victory';
 
-import last from 'lodash/last'
-
-const y = x => Math.sin(x / 10);
+import {db} from '../firebase';
 
 class RealTimeChart extends Component {
 
   constructor() {
     super();
     this.state = {
-      data: [ {x: 0, y: 0.3} ]
+      data: [ {x: new Date() - 0.00001, y: 0}, {x: new Date(), y: 0} ],
     };
 
-    setInterval(() => {
-      const {data} = this.state;
-      const x = last(data).x + 1;
-      data.push({x, y: y(x)});
-      this.setState({data});
-    }, 20);
+    this.onROIUpdateCallback = this.onROIUpdateCallback.bind(this);
+
+    db.onROIUpdate(0, this.onROIUpdateCallback);
+  }
+
+  onROIUpdateCallback(snap){
+    var localdata = this.state.data;
+    const data = snap.val();
+    const key = Object.keys(data)[0];
+    localdata.push({x: new Date(data[key].time * 1000), y: data[key].num});
+    if (localdata.length > 50){
+      localdata.shift();
+    }
+    this.setState({
+      data: localdata,
+    });
   }
 
   render() {
-    return <div style={{
-      marginTop: -40
-    }}>
-      <VictoryChart containerComponent={< VictoryZoomContainer dimension = "x" />}>
-        <VictoryLine data={this.state.data}/>
+    return <div style={{marginTop:-50}}>
+      <VictoryChart scale={{ x: "time" }}>
+        <VictoryArea style={{ data: { stroke: "2176AE", fill:"57B8FF", fillOpacity:0.3 }}} data={this.state.data}/>
       </VictoryChart>
     </div>
   }
