@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 
+import { Button, Form, Message } from 'semantic-ui-react'
+
 import { auth } from '../firebase';
 
 const byPropKey = (propertyName, value) => () => ({
@@ -45,25 +47,33 @@ class PasswordChangeForm extends Component {
       passwordOne === '';
 
     return (
-      <form onSubmit={this.onSubmit}>
-        <input
-          value={passwordOne}
-          onChange={event => this.setState(byPropKey('passwordOne', event.target.value))}
-          type="password"
-          placeholder="New Password"
-        />
-        <input
-          value={passwordTwo}
-          onChange={event => this.setState(byPropKey('passwordTwo', event.target.value))}
-          type="password"
-          placeholder="Confirm New Password"
-        />
-        <button disabled={isInvalid} type="submit">
+      <Form onSubmit={this.onSubmit}>
+        <Form.Field>
+          <input
+            value={passwordOne}
+            onChange={event => this.setState(byPropKey('passwordOne', event.target.value))}
+            type="password"
+            placeholder="New Password"
+          />
+        </Form.Field>
+        <Form.Field>
+          <input
+            value={passwordTwo}
+            onChange={event => this.setState(byPropKey('passwordTwo', event.target.value))}
+            type="password"
+            placeholder="Confirm New Password"
+          />
+        </Form.Field>
+        <Button disabled={isInvalid} type="submit">
           Reset My Password
-        </button>
+        </Button>
 
-        { error && <p>{error.message}</p> }
-      </form>
+        { error && <Message
+                        error
+                        header='Error'
+                        content={error.message}
+                    /> }
+      </Form>
     );
   }
 }

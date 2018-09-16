@@ -22,3 +22,12 @@ export const updateRunningStatus = (id, value) =>
     running: value
   });
 
+export const onROIUpdate = (id, callback) =>
+  db.ref(`roi/${id}`).orderByKey().limitToLast(1).on('value', callback);
+
+export const onVideoFrame = (id, callback) =>
+  db.ref(`video/${id}`).on('value', callback);
+
+export const onStatsUpdate = (id, callback) =>
+  db.ref(`stats/${id}`).on('value', callback);
+
