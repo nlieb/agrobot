@@ -23,8 +23,8 @@ from RunState import RunState
 class Commander:
     def __init__(self):
         self.bridge = CvBridge()
-
-        cred = credentials.Certificate('secret.json')
+        path = os.path.join(os.path.dirname(os.path.realpath(__file__)), "secret.json")
+        cred = credentials.Certificate(path)
         self.app = firebase_admin.initialize_app(
             credential=cred,
             options={
