@@ -63,7 +63,6 @@ class FirebaseApp():
         db.reference('/video/0').set({
             "image": encoded,
         })
-        print('ENCODE', encoded)
 
     def update(self, mat_img, num):
         self.send_image(mat_img)
