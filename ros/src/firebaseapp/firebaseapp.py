@@ -6,6 +6,7 @@ from time import sleep
 import cv2
 import os
 import random
+import base64
 from time import time
 
 class FirebaseApp():
@@ -43,16 +44,35 @@ class FirebaseApp():
         })
 
     def sketch_run(self):
-        while True:
+        img_path = 'imgs'
+        imgs = sorted(os.path.join(img_path, img) for img in os.listdir(img_path))
+        for img in imgs:
             size = random.randint(0, 5)
+            mat_img = cv2.imread(img)
+
             self.send_roi(size)
+            self.send_image(mat_img)
             sleep(.5)
 
         self.close()
 
+    def send_image(self, mat_img):
+        _, buf = cv2.imencode('.jpg', mat_img)
+        encoded = "data:image/jpg;base64," + base64.b64encode(buf)
+
+        db.reference('/video/0').set({
+            "image": encoded,
+        })
+        print('ENCODE', encoded)
+
+    def update(self, mat_img, num):
+        self.send_image(mat_img)
+        self.send_roi(num)
+
     def run(self):
         while True:
             sleep(.5)
+        self.close()
 
     def close(self):
         self.connection.close()
